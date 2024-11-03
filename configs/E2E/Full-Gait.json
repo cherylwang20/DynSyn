@@ -1,0 +1,54 @@
+{
+    "agent": "SAC",
+    "agent_kwargs": {
+        "learning_rate": "linear_schedule(0.001)",
+        "gradient_steps": 4,
+        "policy_kwargs": {
+            "net_arch": {
+                "pi": [
+                    512,
+                    300
+                ],
+                "qf": [
+                    512,
+                    300
+                ]
+            }
+        }
+    },
+    "env_header": "import os; import sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../FullBody-Model'))); import msmodel_gym;",
+    "env_name": "msmodel_gym/ImitationFull-v4",
+    "env_nums": 80,
+    "single_env_kwargs": {
+        "skip_frames": 5,
+        "reset_noise_scale": 0,
+        "vel_reward_weight": 2,
+        "ctrl_cost_weight": 0,
+        "qpos_imitation_weight": 10,
+        "qvel_imitation_weight": 0,
+        "healthy_reward_weight": 5,
+        "is_reward_exp": false,
+        "is_init_vel": 1.25,
+        "smooth_qacc_weight": 0
+    },
+    "wrapper_list": {
+        "MuscleNormWrapper": {}
+    },
+    "vec_normalize": {
+        "is_norm": true,
+        "kwargs": {
+            "norm_obs": true,
+            "norm_reward": false,
+            "clip_obs": 10.0
+        }
+    },
+    "total_timesteps": 5e7,
+    "play": false,
+    "load_model_dir": "",
+    "check_freq": 5e6,
+    "record_freq": 5e6,
+    "dump_freq": 5e6,
+    "reward_freq": 0,
+    "log_root_dir": "./logs/E2E",
+    "seed": 0
+}

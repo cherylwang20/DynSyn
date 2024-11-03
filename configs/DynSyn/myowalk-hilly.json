@@ -1,0 +1,199 @@
+{
+    "agent": "DynSynSAC",
+    "agent_kwargs": {
+        "learning_rate": "linear_schedule(0.001)",
+        "gradient_steps": 4,
+        "policy_kwargs": {
+            "dynsyn": [
+                [
+                    0,
+                    1,
+                    5
+                ],
+                [
+                    2,
+                    3
+                ],
+                [
+                    4
+                ],
+                [
+                    6,
+                    23,
+                    31,
+                    32
+                ],
+                [
+                    7
+                ],
+                [
+                    8,
+                    9,
+                    35
+                ],
+                [
+                    10,
+                    11,
+                    36
+                ],
+                [
+                    12,
+                    13
+                ],
+                [
+                    14,
+                    15
+                ],
+                [
+                    16
+                ],
+                [
+                    17,
+                    20,
+                    21
+                ],
+                [
+                    18,
+                    22
+                ],
+                [
+                    19,
+                    27
+                ],
+                [
+                    24,
+                    28
+                ],
+                [
+                    25,
+                    26
+                ],
+                [
+                    29
+                ],
+                [
+                    30
+                ],
+                [
+                    33
+                ],
+                [
+                    34
+                ],
+                [
+                    37,
+                    38,
+                    39
+                ],
+                [
+                    40,
+                    41,
+                    45
+                ],
+                [
+                    42
+                ],
+                [
+                    43
+                ],
+                [
+                    44
+                ],
+                [
+                    46,
+                    63,
+                    71,
+                    72
+                ],
+                [
+                    47
+                ],
+                [
+                    48,
+                    49,
+                    75
+                ],
+                [
+                    50,
+                    51,
+                    76
+                ],
+                [
+                    52,
+                    53
+                ],
+                [
+                    54,
+                    55
+                ],
+                [
+                    56
+                ],
+                [
+                    57,
+                    60,
+                    61
+                ],
+                [
+                    58,
+                    62
+                ],
+                [
+                    59,
+                    67
+                ],
+                [
+                    64,
+                    68
+                ],
+                [
+                    65,
+                    66
+                ],
+                [
+                    69
+                ],
+                [
+                    70,
+                    74
+                ],
+                [
+                    73
+                ],
+                [
+                    77,
+                    78,
+                    79
+                ]
+            ],
+            "dynsyn_log_std": 0.5
+        },
+        "policy": "DynSynSACPolicy",
+        "dynsyn_a": 1e6,
+        "dynsyn_k": 5e-8
+    },
+    "env_header": "import os; import sys; from myosuite.utils import gym",
+    "env_name": "myoLegHillyTerrainWalk-v0",
+    "env_nums": 80,
+    "single_env_kwargs": {},
+    "wrapper_list": {
+        "MyosuiteWrapper": {}
+    },
+    "vec_normalize": {
+        "is_norm": true,
+        "kwargs": {
+            "norm_obs": true,
+            "norm_reward": false,
+            "clip_obs": 10.0
+        }
+    },
+    "total_timesteps": 3e6,
+    "play": false,
+    "load_model_dir": "",
+    "check_freq": 5e5,
+    "record_freq": 5e5,
+    "dump_freq": 5e5,
+    "reward_freq": 0,
+    "log_root_dir": "./logs",
+    "seed": 0
+}

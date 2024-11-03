@@ -1,0 +1,112 @@
+# The default arguments
+Base: &Base
+    play_times: 1
+    num_frames: 500000
+    control_freq: 10
+
+    env_kwargs: null
+    wrapper: null
+    special_control: null
+
+    logdir: "logs"
+
+msmodel_header: &msmodel_header "import os; import sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../FullBody-Model'))); import msmodel_gym;"
+myosuite_header: &myosuite_header "import os, sys; from myosuite.utils import gym;"
+
+# MyoSuite Environments
+# MyoLegWalk
+myoLegWalk:
+    <<: *Base
+
+    # Env
+    env_name: "myoLegWalk-v0"
+    header: *myosuite_header
+    wrapper:
+        "MyosuiteWrapper":
+            render_mode: null
+    # Control
+    control_amp: 10
+    # Special Control
+    special_control: >-
+        env.data.qvel[:6] *= 0;
+        env.data.qvel[2] = 0.1;
+
+    latent_dim: 40
+
+# DieReorient
+myoDieReorient:
+    <<: *Base
+
+    # Env
+    env_name: "myoHandReorient100-v0"
+    header: *myosuite_header
+    wrapper:
+        "MyosuiteWrapper":
+            render_mode: null
+
+    # Control
+    control_amp: 100
+    control_freq: 10
+    # Special Control
+    special_control: >-
+        env.data.qvel[-6:] *= 0;
+        env.data.qpos[-6:-3] = 1
+    latent_dim: 25
+
+ostrichRun:
+    <<: *Base
+
+    # Env
+    env_name: "msmodel_gym/OstrichRun-v1"
+    header: *msmodel_header
+    env_kwargs:
+        render_mode: null
+    # Control
+    control_amp: 10
+    special_control: >-
+        env.data.qvel[:6] *= 0;
+        env.data.qvel[2] = 0.2;
+
+    latent_dim: 40
+
+# FullGait
+fullGait:
+    <<: *Base
+
+    # Env
+    env_name: "msmodel_gym/ImitationFull-v2"
+    header: *msmodel_header
+    # Control
+    control_amp: 5
+    # Special Control
+    special_control: >-
+        env.data.qvel[:6] *= 0;
+        env.data.qvel[1] = 0.1;
+    latent_dim: 200
+
+legsGait:
+    <<: *Base
+
+    env_name: "msmodel_gym/LegsGait-v1"
+    env_kwargs:
+        render_mode: null
+
+    header: *msmodel_header
+    special_control: >-
+        env.data.qvel[:6] *= 0;
+        env.data.qvel[2] = 0.4;
+    control_amp: 10
+    latent_dim: 40
+
+armBottle:
+    <<: *Base
+
+    env_name: "msmodel_gym/ArmBottle-v1"
+    env_kwargs:
+        render_mode: null
+    header: *msmodel_header
+    control_amp: 5
+    special_control: >-
+        env.data.qvel[-6:] *= 0;
+        env.data.qpos[-6:-3] = 1
+    latent_dim: 40

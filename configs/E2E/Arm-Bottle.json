@@ -1,0 +1,62 @@
+{
+    "agent": "SAC",
+    "agent_kwargs": {
+        "learning_rate": "linear_schedule(0.001)",
+        "gradient_steps": 4
+    },
+    "env_header": "import os; import sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../FullBody-Model'))); import msmodel_gym;",
+    "env_name": "msmodel_gym/ArmBottle-v1",
+    "env_nums": 80,
+    "single_env_kwargs": {
+        "skip_frames": 5,
+        "reset_noise_scale": 1e-3,
+        "target_pos_range": [
+            [
+                -0.1,
+                -0.2,
+                0.1
+            ],
+            [
+                0.1,
+                0.2,
+                0.3
+            ]
+        ],
+        "target_ori_range": [
+            [
+                -0.4,
+                -0.4
+            ],
+            [
+                0.4,
+                0.4
+            ]
+        ],
+        "weight_pos": 50,
+        "weight_ori": 5,
+        "weight_reach": 10,
+        "weight_lift": 0,
+        "weight_act": 1,
+        "weight_done": 0
+    },
+    "wrapper_list": {
+        "MuscleNormWrapper": {}
+    },
+    "vec_normalize": {
+        "is_norm": true,
+        "kwargs": {
+            "norm_obs": true,
+            "norm_reward": false,
+            "clip_obs": 10.0
+        }
+    },
+    "total_timesteps": 3e6,
+    "play": false,
+    "load_model_dir": "",
+    "check_freq": 5e5,
+    "record_freq": 5e5,
+    "dump_freq": 5e5,
+    "reward_freq": 0,
+    "log_root_dir": "./logs/E2E",
+    "seed": 0
+}

@@ -1,0 +1,9 @@
+# Vscode settings
+.vscode
+
+# Python cache
+__pycache__
+
+# Logs
+logs
+wandb

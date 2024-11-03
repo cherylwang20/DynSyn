@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "dynsyn"
+version = "0.1.0"
+description = "Dynamical Synergistic Representation for Efficient Learning and Control in Overactuated Embodied Systems"
+authors = ["Kaibo He"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+stable-baselines3 = {extras = ["extra"], version = "^2.3.2"}
+sb3-contrib = "^2.3.0"
+moviepy = "^1.0.3"
+myosuite = "^2.8.4"
+gymnasium = "0.29.1"
+pyyaml = "^6.0.2"
+kmedoids = "^0.5.2"
+wandb = "^0.18.5"
+
+[tool.poetry.scripts]
+runner = "dynsyn.sb3_runner.runner:main"
+gen_dynsyn = "dynsyn.dynsyn:main"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

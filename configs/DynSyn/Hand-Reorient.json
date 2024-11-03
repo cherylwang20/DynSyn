@@ -1,0 +1,128 @@
+{
+    "agent": "DynSynSAC",
+    "agent_kwargs": {
+        "learning_rate": "linear_schedule(0.001)",
+        "gradient_steps": 4,
+        "policy_kwargs": {
+            "dynsyn": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    2,
+                    16,
+                    17,
+                    20
+                ],
+                [
+                    3,
+                    5
+                ],
+                [
+                    4
+                ],
+                [
+                    6
+                ],
+                [
+                    7
+                ],
+                [
+                    8,
+                    12,
+                    36
+                ],
+                [
+                    9,
+                    13
+                ],
+                [
+                    10,
+                    14
+                ],
+                [
+                    11,
+                    15
+                ],
+                [
+                    18,
+                    19,
+                    21
+                ],
+                [
+                    22,
+                    23
+                ],
+                [
+                    24
+                ],
+                [
+                    25
+                ],
+                [
+                    26
+                ],
+                [
+                    27
+                ],
+                [
+                    28
+                ],
+                [
+                    29
+                ],
+                [
+                    30
+                ],
+                [
+                    31
+                ],
+                [
+                    32
+                ],
+                [
+                    33,
+                    34
+                ],
+                [
+                    35
+                ],
+                [
+                    37
+                ],
+                [
+                    38
+                ]
+            ],
+            "dynsyn_log_std": 0.5
+        },
+        "policy": "DynSynSACPolicy",
+        "dynsyn_k": 5e-8,
+        "dynsyn_a": 1e6
+    },
+    "env_header": "import os; import sys; from myosuite.utils import gym",
+    "env_name": "myoHandReorient100-v0",
+    "env_nums": 80,
+    "single_env_kwargs": {},
+    "wrapper_list": {
+        "MyosuiteWrapper": {}
+    },
+    "vec_normalize": {
+        "is_norm": true,
+        "kwargs": {
+            "norm_obs": true,
+            "norm_reward": false,
+            "clip_obs": 10.0
+        }
+    },
+    "total_timesteps": 3e6,
+    "play": false,
+    "load_model_dir": "",
+    "check_freq": 5e5,
+    "record_freq": 5e5,
+    "dump_freq": 5e5,
+    "reward_freq": 0,
+    "log_root_dir": "./logs",
+    "seed": 0
+}

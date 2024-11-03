@@ -1,0 +1,31 @@
+{
+    "agent": "SAC",
+    "agent_kwargs": {
+        "learning_rate": "linear_schedule(0.001)",
+        "gradient_steps": 4
+    },
+    "env_header": "import os; import sys; from myosuite.utils import gym",
+    "env_name": "myoLegRoughTerrainWalk-v0",
+    "env_nums": 80,
+    "single_env_kwargs": {},
+    "wrapper_list": {
+        "MyosuiteWrapper": {}
+    },
+    "vec_normalize": {
+        "is_norm": true,
+        "kwargs": {
+            "norm_obs": true,
+            "norm_reward": false,
+            "clip_obs": 10.0
+        }
+    },
+    "total_timesteps": 3e6,
+    "play": false,
+    "load_model_dir": "",
+    "check_freq": 5e5,
+    "record_freq": 5e5,
+    "dump_freq": 5e5,
+    "reward_freq": 0,
+    "log_root_dir": "./logs/E2E",
+    "seed": 0
+}
