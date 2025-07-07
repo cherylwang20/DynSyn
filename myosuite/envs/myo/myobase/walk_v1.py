@@ -16,10 +16,14 @@ import scipy
 class WalkEnvV0(BaseV0):
 
     DEFAULT_OBS_KEYS = [
+        'time',
         'qpos',
         'height',
         'qvel',
         'com_vel',
+        'root_error',
+        'qpos_error',
+        'qvel_error',
     ]
 
     DEFAULT_RWD_KEYS_AND_WEIGHTS = {
@@ -70,6 +74,7 @@ class WalkEnvV0(BaseV0):
         self.target_rot = target_rot
         self.error_qpos = 0
         self.error_qvel = 0
+        self.error_root = 0
         self.steps = 0
         self.set_joints = ['hip_flexion_r',	'hip_adduction_r',
                                                     'hip_rotation_r',	'knee_angle_r',	
@@ -88,12 +93,15 @@ class WalkEnvV0(BaseV0):
 
     def get_obs_dict(self, sim):
         obs_dict = {}
-        obs_dict['t'] = np.array([sim.data.time])
         obs_dict['time'] = np.array([sim.data.time])
         obs_dict['qpos'] = sim.data.qpos[:].copy()
         obs_dict['qvel'] = sim.data.qvel[:].copy() * self.dt
         obs_dict['height'] = np.array([self._get_height()]).copy()
         obs_dict['com_vel'] = np.array([self._get_com_velocity().copy()])
+        self.error_qpos, self.error_qvel, self.error_root = self._get_joint_angle_rew()
+        obs_dict['root_error'] = np.array([self.error_root])
+        obs_dict['qpos_error'] = np.array([self.error_qpos])
+        obs_dict['qvel_error'] = np.array([self.error_qvel])
 
         if sim.model.na>0:
             obs_dict['act'] = sim.data.act[:].copy()
@@ -101,16 +109,14 @@ class WalkEnvV0(BaseV0):
         return obs_dict
 
     def get_reward_dict(self, obs_dict):
-        #vel_reward = self._get_vel_reward()
-        self.error_qpos, self.error_qvel, root_err = self._get_joint_angle_rew()
         act_mag = np.linalg.norm(self.obs_dict['act'], axis=-1)/self.sim.model.na if self.sim.model.na !=0 else 0
         torso_up = abs(self.sim.data.qpos[self.sim.model.jnt_qposadr[self.sim.model.joint_name2id('flex_extension')]])
 
         rwd_dict = collections.OrderedDict((
             # Optional Keys
             ('ref_vel', np.exp(- 1 * self.error_qvel)),
-            ('ref_qpos', np.exp(- 200 * self.error_qpos)),
-            ('root_err', np.exp(- 200 * root_err)),
+            ('ref_qpos', np.exp(- 100 * self.error_qpos)),
+            ('root_err', np.exp(- 200 * self.error_root)),
             ('act_mag', act_mag[0][0]),
             ('torso', np.exp(- 5 * torso_up)),
             # Must keys
@@ -168,6 +174,9 @@ class WalkEnvV0(BaseV0):
 
     def reset(self, **kwargs):
         self.steps = 0
+        self.error_qpos = 0
+        self.error_qvel = 0
+        self.error_root = 0
         if self.reset_type == 'random':
             qpos, qvel = self.get_randomized_initial_state()
         elif self.reset_type == 'init':
