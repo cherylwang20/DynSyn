@@ -11,7 +11,7 @@ Base: &Base
     logdir: "logs"
 
 msmodel_header: &msmodel_header "import os; import sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../FullBody-Model'))); import msmodel_gym;"
-myosuite_header: &myosuite_header "import os, sys; from myosuite.utils import gym;"
+myosuite_header: &myosuite_header "import os, sys; from myosuite.utils import gym;  sys.path.append('C:/Users/chery/Documents/DynSyn/myosuite'); sys.path.append(os.getcwd());"
 
 # MyoSuite Environments
 # MyoLegWalk
@@ -32,6 +32,24 @@ myoLegWalk:
         env.data.qvel[2] = 0.1;
 
     latent_dim: 40
+
+myoFullBodyWalk:
+    <<: *Base
+
+    # Env
+    env_name: "myofullbodyWalk-v0"
+    header: *myosuite_header
+    wrapper:
+        "MyosuiteWrapper":
+            render_mode: null
+    # Control
+    control_amp: 10
+    # Special Control
+    special_control: >-
+        env.data.qvel[:6] *= 0;
+        env.data.qvel[2] = 0.1;
+
+    latent_dim: 100
 
 # DieReorient
 myoDieReorient:

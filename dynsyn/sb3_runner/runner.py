@@ -2,6 +2,11 @@ import os
 import time
 import argparse
 import json
+import sys
+sys.path.append(os.getcwd() + r"\myosuite")
+sys.path.append(r'C:\Users\chery\Documents\DynSyn\myosuite')
+sys.path.append(r'C:\Users\chery\Documents\DynSyn')
+import myosuite.envs.myo.myobase
 
 import stable_baselines3 as sb3
 import sb3_contrib
@@ -184,7 +189,7 @@ def train(args):
         model = Agent.load(
             os.path.join(args.load_model_dir, "model.zip"),
             env=vec_env,
-            verbose=1,
+            verbose=0,
             tensorboard_log=log_dir,
             **args.agent_kwargs,
         )
@@ -192,7 +197,7 @@ def train(args):
             model.load_replay_buffer(os.path.join(args.load_model_dir, "replay_buffer.zip"))
     else:
         policy = load_policy(args, Agent)
-        model = Agent(policy, env=vec_env, verbose=1, tensorboard_log=log_dir, **args.agent_kwargs)
+        model = Agent(policy, env=vec_env, verbose=0, tensorboard_log=log_dir, **args.agent_kwargs)
 
     model.learn(total_timesteps=args.total_timesteps, progress_bar=True, callback=callback_list)
 

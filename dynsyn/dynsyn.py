@@ -1,9 +1,16 @@
 import os
 import argparse
+import sys
+sys.path.append(os.getcwd() + r"\myosuite")
+sys.path.append(r'C:\Users\chery\Documents\DynSyn\myosuite')
+sys.path.append(r'C:\Users\chery\Documents\DynSyn')
+import myosuite.envs.myo.myobase
 
 import yaml
 import numpy as np
-import gymnasium as gym
+from myosuite.utils import gym
+
+#import gymnasium as gym
 import matplotlib.pyplot as plt
 import kmedoids
 from stable_baselines3.common.utils import set_random_seed
@@ -175,6 +182,7 @@ def generate_dynsyn_data_random(args):
         for wrapper in args.wrapper.keys():
             env = eval(wrapper)(env, **args.wrapper[wrapper])
     env.reset()
+    motion_frame_counter = 0
 
     # Init the buffer
     muscle_len_data_play = np.zeros((args.play_times, args.num_frames, env.model.nu))
@@ -196,6 +204,10 @@ def generate_dynsyn_data_random(args):
                     exec(args.special_control)
 
                 env.step(zero_action)
+                motion_frame_counter += 1
+                if motion_frame_counter >= 500:
+                    env.reset()
+                    motion_frame_counter = 0
 
                 length = env.data.actuator_length.copy()
                 muscle_len_data_play[i, j * args.control_freq + k, :] = length
