@@ -1,7 +1,7 @@
 {
     "agent": "DynSynSAC",
     "agent_kwargs": {
-        "learning_rate": "linear_schedule(0.001)",
+        "learning_rate": "linear_schedule(0.0005)",
         "gradient_steps": 4,
         "policy_kwargs": {
             "dynsyn": [
@@ -520,7 +520,7 @@
                 "clip_obs": 10.0
             }
         },
-        "total_timesteps": 3e7,
+        "total_timesteps": 10e7,
         "play": false,
         "load_model_dir": "",
         "load_kwargs": {
@@ -531,9 +531,5 @@
         "dump_freq": 1e6,
         "reward_freq": 0,
         "log_root_dir": "./logs",
-        "seed": 0,
-        "wandb": {
-                "use_wandb": true,
-                "project_name": "DynSyn_fullbody"
-                }
+        "seed": 0
     }

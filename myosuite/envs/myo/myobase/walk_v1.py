@@ -67,7 +67,7 @@ class WalkEnvV0(BaseV0):
                ):
         self.min_height = min_height
         self.max_rot = max_rot
-        self.MAX_ERROR = 1.05
+        self.MAX_ERROR = 0.5
         self.reset_type = reset_type
         self.target_x_vel = target_x_vel
         self.target_y_vel = -target_y_vel
@@ -75,20 +75,21 @@ class WalkEnvV0(BaseV0):
         self.error_qpos = 0
         self.error_qvel = 0
         self.error_root = 0
+        self.torso_up = 0
         self.steps = 0
         self.set_joints = ['hip_flexion_r',	'hip_adduction_r',
-                                                    'hip_rotation_r',	'knee_angle_r',	
-                                                    'ankle_angle_r',   'mtp_angle_r', 'hip_flexion_l', 
-                                                    'ankle_angle_r',   'mtp_angle_r', 'hip_flexion_l', 
-                                                    'hip_adduction_l',	'hip_rotation_l',
-                                                    'knee_angle_l',	'ankle_angle_l', 'mtp_angle_l',
-                                                    'flex_extension',	'lat_bending',	'axial_rotation']
+                            'hip_rotation_r',	'knee_angle_r',	
+                            'ankle_angle_r',   'mtp_angle_r', 'hip_flexion_l', 
+                            'hip_adduction_l',	'hip_rotation_l',
+                            'knee_angle_l',	'ankle_angle_l', 'mtp_angle_l',
+                            'flex_extension',	'lat_bending',	'axial_rotation']
         self.ref_data = self.read_npy()
+        self.init_qpos = self.sim.model.key_qpos[0]
         super()._setup(obs_keys=obs_keys,
                        weighted_reward_keys=weighted_reward_keys,
                        **kwargs
                        )
-        self.init_qpos[:] = self.sim.model.key_qpos[0]
+        
 
 
     def get_obs_dict(self, sim):
@@ -99,6 +100,8 @@ class WalkEnvV0(BaseV0):
         obs_dict['height'] = np.array([self._get_height()]).copy()
         obs_dict['com_vel'] = np.array([self._get_com_velocity().copy()])
         self.error_qpos, self.error_qvel, self.error_root = self._get_joint_angle_rew()
+        if self.steps == 0:
+            self.error_qpos = 0
         obs_dict['root_error'] = np.array([self.error_root])
         obs_dict['qpos_error'] = np.array([self.error_qpos])
         obs_dict['qvel_error'] = np.array([self.error_qvel])
@@ -110,15 +113,14 @@ class WalkEnvV0(BaseV0):
 
     def get_reward_dict(self, obs_dict):
         act_mag = np.linalg.norm(self.obs_dict['act'], axis=-1)/self.sim.model.na if self.sim.model.na !=0 else 0
-        torso_up = abs(self.sim.data.qpos[self.sim.model.jnt_qposadr[self.sim.model.joint_name2id('flex_extension')]])
-
+        #torso_up = abs(self.sim.data.qpos[self.sim.model.jnt_qposadr[self.sim.model.joint_name2id('flex_extension')]])
         rwd_dict = collections.OrderedDict((
             # Optional Keys
             ('ref_vel', np.exp(- 1 * self.error_qvel)),
             ('ref_qpos', np.exp(- 100 * self.error_qpos)),
             ('root_err', np.exp(- 200 * self.error_root)),
             ('act_mag', act_mag[0][0]),
-            ('torso', np.exp(- 5 * torso_up)),
+            ('torso', np.exp(- 5 * self.torso_up)),
             # Must keys
             ('sparse',  self.error_qpos <= 1),
             ('solved',    None),
@@ -138,7 +140,9 @@ class WalkEnvV0(BaseV0):
             for joint in self.set_joints
         ]
 
-        #set the knee angle to be negative?? No need since it was ran in myosuite IK.
+        torso_indices = [self.sim.model.jnt_qposadr[self.sim.model.joint_name2id('flex_extension')]]
+        self.torso_up = np.linalg.norm(self.sim.data.qpos[torso_indices].copy() - self.read_npy()[0][self.steps][torso_indices])
+
         error_qpos = self.sim.data.qpos[indices].copy() - self.read_npy()[0][self.steps][indices]
         avg_error_qpos = np.linalg.norm(error_qpos)
 
@@ -174,9 +178,9 @@ class WalkEnvV0(BaseV0):
 
     def reset(self, **kwargs):
         self.steps = 0
-        self.error_qpos = 0
         self.error_qvel = 0
         self.error_root = 0
+        self.torso_up = 0
         if self.reset_type == 'random':
             qpos, qvel = self.get_randomized_initial_state()
         elif self.reset_type == 'init':
