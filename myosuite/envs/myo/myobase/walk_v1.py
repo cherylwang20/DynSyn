@@ -67,7 +67,8 @@ class WalkEnvV0(BaseV0):
                ):
         self.min_height = min_height
         self.max_rot = max_rot
-        self.MAX_ERROR = 0.5
+        self.MAX_ERROR = 0.8
+        self.TORSO_ERROR = 0.3
         self.reset_type = reset_type
         self.target_x_vel = target_x_vel
         self.target_y_vel = -target_y_vel
@@ -101,7 +102,7 @@ class WalkEnvV0(BaseV0):
         obs_dict['com_vel'] = np.array([self._get_com_velocity().copy()])
         self.error_qpos, self.error_qvel, self.error_root = self._get_joint_angle_rew()
         if self.steps == 0:
-            self.error_qpos = 0
+            self.error_qpos, self.torso_up = 0, 0
         obs_dict['root_error'] = np.array([self.error_root])
         obs_dict['qpos_error'] = np.array([self.error_qpos])
         obs_dict['qvel_error'] = np.array([self.error_qvel])
@@ -117,16 +118,17 @@ class WalkEnvV0(BaseV0):
         rwd_dict = collections.OrderedDict((
             # Optional Keys
             ('ref_vel', np.exp(- 1 * self.error_qvel)),
-            ('ref_qpos', np.exp(- 100 * self.error_qpos)),
-            ('root_err', np.exp(- 200 * self.error_root)),
+            ('ref_qpos', np.exp(- 5 * self.error_qpos)),
+            ('root_err', np.exp(- 10 * self.error_root)),
             ('act_mag', act_mag[0][0]),
             ('torso', np.exp(- 5 * self.torso_up)),
             # Must keys
-            ('sparse',  self.error_qpos <= 1),
+            ('sparse',  self.error_qpos <= 0.3),
             ('solved',    None),
             ('done',  self._get_done()),
         ))
 
+        #print([wt*rwd_dict[key] for key, wt in self.rwd_keys_wt.items()])
         rwd_dict['dense'] = np.sum([wt*rwd_dict[key] for key, wt in self.rwd_keys_wt.items()], axis=0)
         return rwd_dict
     
@@ -214,6 +216,8 @@ class WalkEnvV0(BaseV0):
         if self._get_rot_condition():
             return 1
         if self.error_qpos > self.MAX_ERROR:
+            return 1
+        if self.torso_up > self.TORSO_ERROR:
             return 1
         return 0
 
