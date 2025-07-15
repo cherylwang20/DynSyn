@@ -78,7 +78,7 @@ class WalkEnvV0(BaseV0):
         self.error_root = 0
         self.torso_up = 0
         self.steps = 0
-        self.set_joints = ['hip_flexion_r',	'hip_adduction_r',
+        self.set_joints = ['hip_flexion_r',	'hip_adduction_r', 
                             'hip_rotation_r',	'knee_angle_r',	
                             'ankle_angle_r',   'mtp_angle_r', 'hip_flexion_l', 
                             'hip_adduction_l',	'hip_rotation_l',

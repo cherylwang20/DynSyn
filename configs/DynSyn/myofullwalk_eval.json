@@ -521,8 +521,8 @@
             }
         },
         "total_timesteps": 10e7,
-        "play": false,
-        "load_model_dir": "",
+        "play": true,
+        "load_model_dir": "/home/cheryl16/projects/def-durandau/cheryl16/DynSyn/logs/myofullbodyWalk-v0/0710-224028_0/checkpoint/best",
         "load_kwargs": {
             "dynsyn_weight_amp": 0.1
         },

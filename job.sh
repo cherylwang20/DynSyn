@@ -1,9 +1,9 @@
 #!/bin/bash 
 #SBATCH --account=def-durandau
 #SBATCH --job-name=dynsyn_new
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=6
 #SBATCH --time=0-47:50
-#SBATCH --array=8
+#SBATCH --array=16
 #SBATCH --mem=128G
 #SBATCH --mail-user=huiyi.wang@mail.mcgill.ca
 #SBATCH --mail-type=ALL
