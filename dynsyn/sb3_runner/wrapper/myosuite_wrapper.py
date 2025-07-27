@@ -18,7 +18,7 @@ class MyosuiteWrapper(gym.Wrapper):
         elif self.render_mode == "rgb_array":
             frame_size = (640, 480)
             return self.env.sim.renderer.render_offscreen(
-                frame_size[0], frame_size[1], camera_id=-1, device_id=0
+                frame_size[0], frame_size[1], camera_id=0, device_id=0
             )
 
 

@@ -1,7 +1,7 @@
 {
     "agent": "DynSynSAC",
     "agent_kwargs": {
-        "learning_rate": "linear_schedule(0.0005)",
+        "learning_rate": "linear_schedule(0.0003)",
         "gradient_steps": 4,
         "policy_kwargs": {
             "dynsyn": [
@@ -526,6 +526,7 @@
         "load_kwargs": {
             "dynsyn_weight_amp": 0.1
         },
+        "load_buffer": false,
         "check_freq": 2e6,
         "record_freq": 2e6,
         "dump_freq": 2e6,

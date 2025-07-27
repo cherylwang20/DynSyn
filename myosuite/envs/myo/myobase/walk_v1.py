@@ -16,7 +16,6 @@ import scipy
 class WalkEnvV0(BaseV0):
 
     DEFAULT_OBS_KEYS = [
-        'time',
         'qpos',
         'height',
         'qvel',
@@ -27,12 +26,12 @@ class WalkEnvV0(BaseV0):
     ]
 
     DEFAULT_RWD_KEYS_AND_WEIGHTS = {
-        "ref_vel": 2.0,
         #"vel_rew": 1.0,
-        "root_err": 5.0,
+        "root_err": 2.0,
         "done": 0,
         "torso": 1,
         "ref_qpos": 5.0,
+        "ref_vel": 1.0,
         "act_mag": -1,
         "sparse": 1,
     }
