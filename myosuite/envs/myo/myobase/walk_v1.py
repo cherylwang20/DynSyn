@@ -77,6 +77,7 @@ class WalkEnvV0(BaseV0):
         self.error_root = 0
         self.torso_up = 0
         self.steps = 0
+        self.error_root_x = 0
         self.set_joints = ['hip_flexion_r',	'hip_adduction_r', 
                             'hip_rotation_r',	'knee_angle_r',	
                             'ankle_angle_r',   'mtp_angle_r', 'hip_flexion_l', 
@@ -151,6 +152,7 @@ class WalkEnvV0(BaseV0):
         avg_error_vel = np.linalg.norm(error_qvel)
 
         error_root = np.linalg.norm(self.sim.data.qpos[:2] - self.read_npy()[0][self.steps][:2])
+        self.error_root_x = self.sim.data.qpos[0] - self.read_npy()[0][self.steps][0]
 
         return avg_error_qpos, avg_error_vel, error_root
     
@@ -217,6 +219,8 @@ class WalkEnvV0(BaseV0):
         if self.error_qpos > self.MAX_ERROR:
             return 1
         if self.torso_up > self.TORSO_ERROR:
+            return 1
+        if abs(self.error_root_x) > 0.15:
             return 1
         return 0
 
