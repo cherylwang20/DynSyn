@@ -29,7 +29,7 @@ class WalkEnvV0(BaseV0):
         #"vel_rew": 1.0,
         "root_err": 2.0,
         "done": 0,
-        "torso": 1,
+        #"torso": 1,
         "ref_qpos": 5.0,
         "ref_vel": 1.0,
         "act_mag": -1,
@@ -78,10 +78,9 @@ class WalkEnvV0(BaseV0):
         self.torso_up = 0
         self.steps = 0
         self.error_root_x = 0
-        self.set_joints = ['hip_flexion_r',	'hip_adduction_r', 
-                            'hip_rotation_r',	'knee_angle_r',	
-                            'ankle_angle_r',   'mtp_angle_r', 'hip_flexion_l', 
-                            'hip_adduction_l',	'hip_rotation_l',
+        self.set_joints = ['hip_flexion_r',	'hip_adduction_r', #'hip_rotation_r',	
+                            'knee_angle_r',	'ankle_angle_r',   'mtp_angle_r', 
+                            'hip_flexion_l', 'hip_adduction_l',	#'hip_rotation_l',
                             'knee_angle_l',	'ankle_angle_l', 'mtp_angle_l',
                             'flex_extension',	'lat_bending',	'axial_rotation']
         self.ref_data = self.read_npy()
