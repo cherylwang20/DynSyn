@@ -222,7 +222,7 @@ def evaluate(model, args, is_record=False, render_mode="human"):
             model,
             args,
             video_dir="./output_video",
-            video_ep_num=5,
+            video_ep_num=2,
             name_prefix=args.env_name.split("/")[-1],
         )
     else:

@@ -30,6 +30,7 @@ def create_env(
 
     set_random_seed(seed)
     env = gym.make(env_name, render_mode=render_mode, **single_env_kwargs)
+    env.unwrapped._camera_id = 2
 
     for wrapper_name, wrapper_args in wrapper_list.items():
         try:
@@ -91,6 +92,13 @@ def record_video(
         monitor_kwargs=None,
         seed=args.seed,
     )
+
+    try:
+        base_env = env.envs[0]
+        if hasattr(base_env, "sim") and hasattr(base_env.sim.model, "cam_select"):
+            base_env.sim.model.cam_select = camera_id
+    except Exception as e:
+        print(f"[Warning] Could not set custom camera: {e}")
 
     vec_env = VecVideoRecorder(
         env,

@@ -415,7 +415,7 @@ register_env_with_variants(id='myoLegWalk-v0',
 
 register_env_with_variants(id='myofullbodyWalk-v0',
         entry_point='myosuite.envs.myo.myobase.walk_v1:WalkEnvV0',
-        max_episode_steps=300,
+        max_episode_steps=450,
         kwargs={
             'model_path': curr_dir + fb_model,
             'normalize_act': True,
