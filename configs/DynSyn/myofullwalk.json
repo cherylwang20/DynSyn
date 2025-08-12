@@ -520,7 +520,7 @@
                 "clip_obs": 10.0
             }
         },
-        "total_timesteps": 10e7,
+        "total_timesteps": 6e7,
         "play": false,
         "load_model_dir": "",
         "load_kwargs": {
