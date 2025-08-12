@@ -213,7 +213,7 @@ class WalkEnvV0(BaseV0):
         height = self._get_height()
         if height < self.min_height:
             return 1
-        if self._get_rot_condition():
+        if self._get_rot_condition() and self.steps > 0:
             return 1
         if self.error_qpos > self.MAX_ERROR:
             return 1

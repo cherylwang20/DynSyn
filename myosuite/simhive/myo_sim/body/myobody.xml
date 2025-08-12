@@ -9,13 +9,14 @@
 ====================================================== -->
     <include file="../scene/myosuite_scene_noPedestal.xml"/>
     <include file="../torso/assets/myotorso_assets.xml"/>
+    <include file="../head/assets/myohead_simple_assets.xml"/>
     <include file="../leg/assets/myolegs_assets.xml"/>
     <include file="../leg/assets/myolegs_tendon.xml"/>
     <include file="../leg/assets/myolegs_muscle.xml"/>
     <compiler angle="radian" meshdir=".." texturedir=".."/>
 
     <worldbody>
-        <body name="Full Body" pos="-.025 0.1 1" euler="0 0 1.57">        
+        <body name="Full Body" pos="-.025 0.1 1">
             <include file="../torso/assets/myotorso_chain.xml"/>
             <include file="../leg/assets/myolegs_chain.xml"/>
             <freejoint name = 'root'/>

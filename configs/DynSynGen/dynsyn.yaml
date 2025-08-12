@@ -49,7 +49,7 @@ myoFullBodyWalk:
         env.data.qvel[:6] *= 0;
         env.data.qvel[2] = 0.1;
 
-    latent_dim: 100
+    latent_dim: 60
 
 # DieReorient
 myoDieReorient:
