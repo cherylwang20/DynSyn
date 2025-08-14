@@ -113,13 +113,14 @@ class WalkEnvV0(BaseV0):
 
     def get_reward_dict(self, obs_dict):
         act_mag = np.linalg.norm(self.obs_dict['act'], axis=-1)/self.sim.model.na if self.sim.model.na !=0 else 0
-        #torso_up = abs(self.sim.data.qpos[self.sim.model.jnt_qposadr[self.sim.model.joint_name2id('flex_extension')]])
+        mtp_reward = self.mtp_reward()
         rwd_dict = collections.OrderedDict((
             # Optional Keys
             ('ref_vel', np.exp(- 1 * self.error_qvel)),
             ('ref_qpos', np.exp(- 5 * self.error_qpos)),
             ('root_err', np.exp(- 10 * self.error_root)),
             ('act_mag', act_mag[0][0]),
+            ('mtp_reward', mtp_reward),
             ('torso', np.exp(- 5 * self.torso_up)),
             # Must keys
             ('sparse',  self.error_qpos <= 0.3),
@@ -268,26 +269,20 @@ class WalkEnvV0(BaseV0):
         
         return qpos_traj['qpos'], qpos_traj['qvel']
 
-    def custom_reward(obs_dict):
-        """
-        Reward function that encourages mtp_angle_r to approach -0.524
-        when hip_flexion_l is greater than -0.1.
-        
-        Args:
-            obs_dict (dict): Dictionary containing joint observations.
-                            Must include 'hip_flexion_l' and 'mtp_angle_r'.
+    def mtp_reward(self):
+        hip_id = self.sim.model.joint_name2id('hip_flexion_l')
+        mtp_id = self.sim.model.joint_name2id('mtp_angle_r')
 
-        Returns:
-            float: Reward value.
-        """
-        hip_flexion_l = obs_dict.get("hip_flexion_l", 0.0)
-        mtp_angle_r = obs_dict.get("mtp_angle_r", 0.0)
+        hip_qpos_idx = self.sim.model.jnt_qposadr[hip_id]
+        mtp_qpos_idx = self.sim.model.jnt_qposadr[mtp_id]
 
-        if hip_flexion_l > -0.1:
-            # Negative of absolute error from target value -0.524
-            error = abs(mtp_angle_r + 0.524)
-            reward = -error  # more negative = worse
+        hip_val = self.sim.data.qpos[hip_qpos_idx]
+        mtp_val = self.sim.data.qpos[mtp_qpos_idx]
+
+        if hip_val > -0.1:
+            error = abs(mtp_val + 0.524)
+            reward = -error  # Encourage mtp to be close to -0.524
         else:
-            reward = 0.0  # no penalty if hip flexion is not in the range
+            reward = 0.0
 
         return reward
