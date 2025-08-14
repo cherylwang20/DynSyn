@@ -267,3 +267,27 @@ class WalkEnvV0(BaseV0):
         qpos_traj = np.load(os.getcwd() + npy_file_path, allow_pickle=True).item()
         
         return qpos_traj['qpos'], qpos_traj['qvel']
+
+    def custom_reward(obs_dict):
+        """
+        Reward function that encourages mtp_angle_r to approach -0.524
+        when hip_flexion_l is greater than -0.1.
+        
+        Args:
+            obs_dict (dict): Dictionary containing joint observations.
+                            Must include 'hip_flexion_l' and 'mtp_angle_r'.
+
+        Returns:
+            float: Reward value.
+        """
+        hip_flexion_l = obs_dict.get("hip_flexion_l", 0.0)
+        mtp_angle_r = obs_dict.get("mtp_angle_r", 0.0)
+
+        if hip_flexion_l > -0.1:
+            # Negative of absolute error from target value -0.524
+            error = abs(mtp_angle_r + 0.524)
+            reward = -error  # more negative = worse
+        else:
+            reward = 0.0  # no penalty if hip flexion is not in the range
+
+        return reward

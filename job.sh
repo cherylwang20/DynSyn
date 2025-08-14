@@ -1,9 +1,9 @@
 #!/bin/bash 
 #SBATCH --account=def-durandau
-#SBATCH --job-name=dynsyn_new
+#SBATCH --job-name=dynsyn_diy_2
 #SBATCH --cpus-per-task=6
-#SBATCH --time=0-47:50
-#SBATCH --array=16
+#SBATCH --time=0-37:50
+#SBATCH --array=5
 #SBATCH --mem=128G
 #SBATCH --mail-user=huiyi.wang@mail.mcgill.ca
 #SBATCH --mail-type=ALL
@@ -28,4 +28,4 @@ export WANDB_MODE=offline
 
 wandb offline
 
-python -m dynsyn.sb3_runner.runner -f configs/DynSyn/myofullwalk.json
+python -m dynsyn.sb3_runner.runner -f configs/DynSyn/myofullwalk_diy_2.json
