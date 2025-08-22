@@ -263,7 +263,7 @@ class WalkEnvV0(BaseV0):
         com =  self.sim.data.xipos
         return (np.sum(mass * com, 0) / np.sum(mass))
 
-    def read_npy(self, npy_file_path = '/reference_motion/ref_traj_Subj04_walk_18.npy'):
+    def read_npy(self, npy_file_path = '/reference_motion/qpos_traj_myofullbody_Subj04_walk_18.npy'):
         
         qpos_traj = np.load(os.getcwd() + npy_file_path, allow_pickle=True).item()
         
