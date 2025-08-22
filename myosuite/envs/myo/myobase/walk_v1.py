@@ -113,13 +113,14 @@ class WalkEnvV0(BaseV0):
 
     def get_reward_dict(self, obs_dict):
         act_mag = np.linalg.norm(self.obs_dict['act'], axis=-1)/self.sim.model.na if self.sim.model.na !=0 else 0
-        #torso_up = abs(self.sim.data.qpos[self.sim.model.jnt_qposadr[self.sim.model.joint_name2id('flex_extension')]])
+        mtp_reward = self.mtp_reward()
         rwd_dict = collections.OrderedDict((
             # Optional Keys
             ('ref_vel', np.exp(- 1 * self.error_qvel)),
             ('ref_qpos', np.exp(- 5 * self.error_qpos)),
             ('root_err', np.exp(- 10 * self.error_root)),
             ('act_mag', act_mag[0][0]),
+            ('mtp_reward', mtp_reward),
             ('torso', np.exp(- 5 * self.torso_up)),
             # Must keys
             ('sparse',  self.error_qpos <= 0.3),
@@ -267,3 +268,21 @@ class WalkEnvV0(BaseV0):
         qpos_traj = np.load(os.getcwd() + npy_file_path, allow_pickle=True).item()
         
         return qpos_traj['qpos'], qpos_traj['qvel']
+
+    def mtp_reward(self):
+        hip_id = self.sim.model.joint_name2id('hip_flexion_l')
+        mtp_id = self.sim.model.joint_name2id('mtp_angle_r')
+
+        hip_qpos_idx = self.sim.model.jnt_qposadr[hip_id]
+        mtp_qpos_idx = self.sim.model.jnt_qposadr[mtp_id]
+
+        hip_val = self.sim.data.qpos[hip_qpos_idx]
+        mtp_val = self.sim.data.qpos[mtp_qpos_idx]
+
+        if hip_val > -0.1:
+            error = abs(mtp_val + 0.524)
+            reward = -error  # Encourage mtp to be close to -0.524
+        else:
+            reward = 0.0
+
+        return reward
